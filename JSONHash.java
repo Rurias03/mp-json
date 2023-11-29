@@ -1,5 +1,6 @@
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * JSON hashes/objects.
@@ -10,9 +11,21 @@ public class JSONHash implements JSONValue {
   // | Fields |
   // +--------+
 
+  /**
+   * The array to store linked lists of key-value pairs
+   */
+  private LinkedList<KVPair<JSONString, JSONValue>>[] table;
+
   // +--------------+------------------------------------------------
   // | Constructors |
   // +--------------+
+
+  /**
+   * Create a new JSONHash with a specific size
+   */
+  public JSONHash(int size) {
+    table = new LinkedList[size];
+  } // JSONHash(int)
 
   // +-------------------------+-------------------------------------
   // | Standard object methods |
@@ -22,21 +35,43 @@ public class JSONHash implements JSONValue {
    * Convert to a string (e.g., for printing).
    */
   public String toString() {
-    return "";          // STUB
+    StringBuilder result = new StringBuilder("{");
+    boolean first = true;
+    for (LinkedList<KVPair<JSONString, JSONValue>> list : table) {
+      for (KVPair<JSONString, JSONValue> pair : list) {
+        if (!first) {
+          result.append(", ");
+        } else {
+          first = false;
+        } // if {} ... else {}
+        result.append(pair.key()).append(": ").append(pair.value());
+      } // for {}
+    } // for {}
+
+    result.append("}");
+    return result.toString();
   } // toString()
 
   /**
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return true;        // STUB
+    if (this == other) {
+      return true;
+    } // if {}
+    if (other == null || getClass() != other.getClass()) {
+      return false;
+    } // if {}
+
+    JSONHash jsonHash = (JSONHash) other;
+    return this.toString().equals(jsonHash.toString());
   } // equals(Object)
 
   /**
    * Compute the hash code.
    */
   public int hashCode() {
-    return 0;           // STUB
+    return toString().hashCode();
   } // hashCode()
 
   // +--------------------+------------------------------------------
@@ -47,14 +82,14 @@ public class JSONHash implements JSONValue {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-                        // STUB
+    pen.print(toString());
   } // writeJSON(PrintWriter)
 
   /**
    * Get the underlying value.
    */
-  public Iterator<KVPair<JSONString,JSONValue>> getValue() {
-    return this.iterator();
+  public Iterator<KVPair<JSONString, JSONValue>> getValue() {
+    return iterator();
   } // getValue()
 
   // +-------------------+-------------------------------------------
@@ -65,28 +100,61 @@ public class JSONHash implements JSONValue {
    * Get the value associated with a key.
    */
   public JSONValue get(JSONString key) {
-    return null;        // STUB
+    int index = hash(key);
+    LinkedList<KVPair<JSONString, JSONValue>> list = table[index];
+    for (KVPair<JSONString, JSONValue> pair : list) {
+      if (pair.key().equals(key)) {
+        return pair.value();
+      } // if {}
+    } // for {}
+    return null;
   } // get(JSONString)
 
   /**
    * Get all of the key/value pairs.
    */
-  public Iterator<KVPair<JSONString,JSONValue>> iterator() {
-    return null;        // STUB
+  public Iterator<KVPair<JSONString, JSONValue>> iterator() {
+    LinkedList<KVPair<JSONString, JSONValue>> result = new LinkedList<>();
+    for (LinkedList<KVPair<JSONString, JSONValue>> list : table) {
+      result.addAll(list);
+    } // for {}
+    return result.iterator();
   } // iterator()
 
   /**
    * Set the value associated with a key.
    */
   public void set(JSONString key, JSONValue value) {
-                        // STUB
+    int index = hash(key);
+    LinkedList<KVPair<JSONString, JSONValue>> list = table[index];
+    for (KVPair<JSONString, JSONValue> pair : list) {
+      if (pair.key().equals(key)) {
+        pair.value = value;
+        return;
+      } // if{}
+    } // for {}
+    list.add(new KVPair<>(key, value));
   } // set(JSONString, JSONValue)
 
   /**
    * Find out how many key/value pairs are in the hash table.
    */
   public int size() {
-    return 0;           // STUB
+    int count = 0;
+    for (LinkedList<KVPair<JSONString, JSONValue>> list : table) {
+      count += list.size();
+    } // for {}
+    return count;
   } // size()
 
+  // +-----------------+--------------------------------------------
+  // | Hashing methods |
+  // +-----------------+
+
+  /**
+   * compute the hash code for a key
+   */
+  private int hash(JSONString key) {
+    return Math.abs(key.hashCode() % table.length);
+  } // hash(JSONString)
 } // class JSONHash

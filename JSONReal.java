@@ -55,14 +55,22 @@ public class JSONReal implements JSONValue {
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return true;        // STUB
+    if (this == other) {
+      return true;
+    } // if {}
+    if (other == null || getClass() != other.getClass()) {
+      return false;
+    } // if {}
+
+    JSONReal that = (JSONReal) other;
+    return value.equals(that.value);
   } // equals(Object)
 
   /**
    * Compute the hash code.
    */
   public int hashCode() {
-    return 0;           // STUB
+    return value.hashCode();
   } // hashCode()
 
   // +--------------------+------------------------------------------
@@ -73,7 +81,7 @@ public class JSONReal implements JSONValue {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-                        // STUB
+    pen.print(toString());
   } // writeJSON(PrintWriter)
 
   /**
@@ -82,5 +90,4 @@ public class JSONReal implements JSONValue {
   public BigDecimal getValue() {
     return this.value;
   } // getValue()
-
 } // class JSONReal

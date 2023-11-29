@@ -33,21 +33,29 @@ public class JSONString implements JSONValue {
    * Convert to a string (e.g., for printing).
    */
   public String toString() {
-    return "";          // STUB
+    return "" + escape(value) + "\"";
   } // toString()
 
   /**
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return true;        // STUB
+    if (this == other) {
+      return true;
+    } // if{}
+    if (other == null || getClass() != other.getClass()) {
+      return false;
+    } // if{}
+
+    JSONString that = (JSONString) other;
+    return value.equals(that.value);
   } // equals(Object)
 
   /**
    * Compute the hash code.
    */
   public int hashCode() {
-    return 0;           // STUB
+    return value.hashCode();
   } // hashCode()
 
   // +--------------------+------------------------------------------
@@ -58,7 +66,7 @@ public class JSONString implements JSONValue {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-                        // STUB
+    pen.print(toString());
   } // writeJSON(PrintWriter)
 
   /**
@@ -67,5 +75,13 @@ public class JSONString implements JSONValue {
   public String getValue() {
     return this.value;
   } // getValue()
+
+  /**
+   * Helper method to escape special characters in a string
+   */
+  private String escape(String input) {
+    // Implement some escape logic for characters if needed
+    return input;
+  } // escape(String)
 
 } // class JSONString

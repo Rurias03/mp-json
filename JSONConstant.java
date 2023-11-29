@@ -63,19 +63,22 @@ public class JSONConstant implements JSONValue {
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return ( ( (other instanceof JSONConstant) 
-               && (this.value == ((JSONConstant) other).value) )
-             || (this.value == other) );
+    if (this == other) {
+      return true;
+    } // if {}
+    if (other == null || getClass() != other.getClass()) {
+      return false;
+    } // if {}
+
+    JSONConstant that = (JSONConstant) other;
+    return (this.value == null ? that.value == null : this.value.equals(that.value));
   } // equals(Object)
 
   /**
    * Compute the hash code.
    */
   public int hashCode() {
-    if (this.value == null)
-      return 0;
-    else
-      return this.value.hashCode();
+    return this.value == null ? 0 : this.value.hashCode();
   } // hashCode()
 
   // +--------------------+------------------------------------------

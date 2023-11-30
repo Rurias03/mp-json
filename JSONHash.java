@@ -23,8 +23,15 @@ public class JSONHash implements JSONValue {
   /**
    * Create a new JSONHash with a specific size
    */
+  @SuppressWarnings("unchecked")
   public JSONHash(int size) {
-    table = new LinkedList[size];
+    // Create an array of raw types
+    table = (LinkedList<KVPair<JSONString, JSONValue>>[]) new LinkedList[size];
+
+    // Initialize each element in the array
+    for (int i = 0; i < size; i++) {
+      table[i] = new LinkedList<>();
+    }
   } // JSONHash(int)
 
   // +-------------------------+-------------------------------------

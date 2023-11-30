@@ -1,9 +1,9 @@
-Mini-Project 8: JSON
+Mini-Project 9: JSON
 ====================
 
 A simple JSON parser.
 
-Implemented by NAME and NAME for CSC-207-01 2023Fa.
+Implemented by Tyrell Taylor and Rene Urias Jr. for CSC-207-01 2023Fa.
 
 Acknowledgements:
 
